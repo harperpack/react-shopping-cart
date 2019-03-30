@@ -31,3 +31,15 @@
     transform: rotate(360deg);
   }
 }
+
+.product-pane {
+    float: left;
+}
+
+button .shipping-tag {
+    float: right;
+}
+
+p .product-title {
+    margin-bottom: 10px;
+}
