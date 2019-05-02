@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import logo from './logo.svg';
 import './App.css';
 
@@ -185,10 +185,6 @@ const Catalog = ({prods}) => (
     </ul>
 );
 
-//const makePane = (sku) => (
-//    <Pane sku={sku}/>
-//);
-
 const Pane = ({sku}) => (
     <div className="prodPane">
         <img className="shirtPic" src='https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1550688238-theory-1550688225.jpg'></img>
@@ -197,12 +193,23 @@ const Pane = ({sku}) => (
     </div>
 );
 
-const App = () => (
+const App = () => {
+    
+    // This is a static state display?
+    let [cartOpen, cartItems] = useState({ cartOpen: false, cartItems: [] });
+    
+    const changeCart = () => (
+    cartOpen = !cartOpen
+    );
+    
+    return(
     <div>
+        <button className="cartBtn" onClick={changeCart}>Open Cart ({cartItems.length} items)</button>
         <Catalog prods={products}/>
         <Cart />
     </div>
-);
+        );
+};
 
 
 export default App;
