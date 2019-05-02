@@ -190,8 +190,8 @@ const Catalog = ({prods}) => (
 //);
 
 const Pane = ({sku}) => (
-    <div>
-        <img src='../public/images/shirt.png'></img>
+    <div className="prodPane">
+        <img className="shirtPic" src='https://hips.hearstapps.com/vader-prod.s3.amazonaws.com/1550688238-theory-1550688225.jpg'></img>
         <h3>{sku.title}</h3>
         <p>${sku.price}</p>
     </div>
