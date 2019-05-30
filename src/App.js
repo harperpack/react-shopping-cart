@@ -249,7 +249,7 @@ const App = () => {
     
     return(
     <div>
-        <button className="cartBtn" onClick={changeCart}>Slug Cart ({cartItems.length} items)</button>
+        <button className="cartBtn" onClick={changeCart}>Travis Cart ({cartItems.length} items)</button>
         <Catalog prods={products}/>
         <Cart />
     </div>
