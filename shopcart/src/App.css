@@ -31,3 +31,28 @@
     transform: rotate(360deg);
   }
 }
+
+.pane {
+    border: 2px solid #adadad;
+    margin: 5px 5px;
+    display: inline-block;
+    width: 30%;
+    height: 20%;
+}
+
+.title {
+    margin-left: 5px;
+}
+
+.shirtPic {
+    margin-left: 5px;
+}
+
+.price {
+    margin-left: 5px;
+}
+
+.availableSizes {
+    display: inline-block;
+    margin: 5px 8px 5px 5px;
+}
