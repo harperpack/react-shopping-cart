@@ -4,6 +4,9 @@ import './App.css';
 import firebase from 'firebase/app';
 import 'firebase/database';
 
+import "rbx/index.css";
+import { Button, Container, Title, Box, Tile, Column, Image, Tag } from 'rbx';
+
 const firebaseConfig = {
   apiKey: "AIzaSyAtoMUvXMS2hE8bDmWt2iMjPY7QlLRhRrI",
   authDomain: "react-shop-cart.firebaseapp.com",
@@ -16,7 +19,20 @@ const firebaseConfig = {
 
 // QUESTIONS FOR RIESBECK
 // 1. How do I wait until the Firebase has fetched before I use its data?
-// 2. 
+//   1b. How would I get the product sizes?
+// 2. Why won't the images show up when hosted locally?
+// 3. How to make pictures smaller?
+// 4. How to format for mobile?
+// 3. How can I change the margin on price?
+// 4. How would I do a proper grid?
+// 5. Why does Travis say I'm still failing?
+// 6. Why do I have these security vulnerabilities?
+
+
+// what is state?
+// > cart open/closed
+// > what is in cart
+// > 
 
 firebase.initializeApp(firebaseConfig);
 
@@ -31,10 +47,6 @@ firebase.database().ref("/products").on('value', snap => {
 }, error => {
     console.log('Big sad');
 });
-
-const troduct = {
-    name: "Great Shirt"
-};
 
 let localProds = [
   {
@@ -228,39 +240,56 @@ let localProds = [
 
 const Panes = ({ products }) => (
   <div>
-    { products.map(product => <Pane product={ product } />) }
+    <Column.Group multiline>
+     { products.map(product => <Pane product={ product } key={product.sku} />) }
+    </Column.Group>
   </div>
 );
 
 const Sizes = ({ sizes }) => (
-    <div>
-        { sizes.map(size => <Size size={size}/>)}
-    </div>
+    <Button.Group>
+        <Button inverted color={"black"} state="hovered" className="txtBtn">
+            <Title subtitle size={5}>Add to Cart:</Title>
+        </Button>
+        { sizes.map(size => <Size size={size} key={size}/>)}
+    </Button.Group>
 );
 
 const Size = ({ size }) => (
-    <p className="availableSizes">{size}</p>
+    <Button as="a" className="availableSizes" color={"light"}>{size}</Button>
 );
 
-const MakeRef = (sku) => (
-    "../public/data/products/" + sku + "_1.jpg"
+const makeRef = (sku) => (
+    "https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/" + sku + "_1.jpg"
 );
 
 const ShirtPic = ({ sku }) => (
-    <img src={MakeRef(sku)} className="shirtPic"/>
+    <Image.Container>
+        <Image src={makeRef(sku)} className="shirtPic" alt="Shirt"/>
+    </Image.Container>
 );
 
 const TestPath = () => (
-    <img src="../public/data/products/12064273040195392_1.jpg"/>
+    <img src="../public/data/products/12064273040195392_1.jpg" alt="Shirt"/>
+);
+
+const OtherTestPath = () => (
+    <div>
+    <Image.Container size={"square"}>
+        <Image src="https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/10412368723880252_1.jpg"/>
+    </Image.Container>
+    </div>
 );
 
 const Pane = ({ product }) => (
-  <div className="pane">
-    <h3 className="title"> { product.title } </h3>
-    <ShirtPic sku={product.sku}/>
-    <h4 className="price">${ product.price }</h4>
-    <Sizes sizes={product.availableSizes}/>
-  </div>
+  <Column size="one-third">
+    <Box>
+        <Title className="title" size={4}> { product.title } </Title>
+        <ShirtPic sku={product.sku}/>
+        <Title className="price" size={5} spacing="false">${ product.price }</Title>
+        <Sizes sizes={product.availableSizes}/>
+    </Box>
+  </Column>
 );
 
 console.log('Test Firebase Pull');
@@ -268,7 +297,7 @@ console.log(allProducts);
 
 const App = () => (
     <div>
-        <h1>Shopping Cart</h1>
+        <Title>Shopping Cart</Title>
         <Panes products={localProds} />
     </div>
 );

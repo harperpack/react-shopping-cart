@@ -33,11 +33,7 @@
 }
 
 .pane {
-    border: 2px solid #adadad;
     margin: 5px 5px;
-    display: inline-block;
-    width: 30%;
-    height: 20%;
 }
 
 .title {
@@ -45,14 +41,17 @@
 }
 
 .shirtPic {
-    margin-left: 5px;
+    margin-bottom: 15px;
 }
 
 .price {
-    margin-left: 5px;
+    margin: 2px 0 1px 5px;
+}
+
+.txtBtn {
+    padding-left: 0;
 }
 
 .availableSizes {
-    display: inline-block;
-    margin: 5px 8px 5px 5px;
+    margin: 2px 2px 1px 5px;
 }
