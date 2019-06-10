@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './App.css';
 
 import firebase from 'firebase/app';
@@ -27,6 +27,7 @@ const firebaseConfig = {
 // 4. How would I do a proper grid?
 // 5. Why does Travis say I'm still failing?
 // 6. Why do I have these security vulnerabilities?
+// 7. Why do we put spaces between words and curly braces?
 
 
 // what is state?
@@ -297,6 +298,7 @@ console.log(allProducts);
 
 const App = () => (
     <div>
+        <Image src="https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/bag-icon.png"/>
         <Title>Shopping Cart</Title>
         <Panes products={localProds} />
     </div>
