@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 import firebase from 'firebase/app';
@@ -20,11 +20,11 @@ const firebaseConfig = {
 // QUESTIONS FOR RIESBECK
 // 1. How do I wait until the Firebase has fetched before I use its data?
 //   1b. How would I get the product sizes?
-// 2. Why won't the images show up when hosted locally?
+//
 // 3. How to make pictures smaller?
 // 4. How to format for mobile?
 // 3. How can I change the margin on price?
-// 4. How would I do a proper grid?
+// 4. 
 // 5. Why does Travis say I'm still failing?
 // 6. Why do I have these security vulnerabilities?
 // 7. Why do we put spaces between words and curly braces?
@@ -261,7 +261,7 @@ const Size = ({ size }) => (
 );
 
 const makeRef = (sku) => (
-    "https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/" + sku + "_1.jpg"
+    "/data/products/" + sku + "_1.jpg"
 );
 
 const ShirtPic = ({ sku }) => (
@@ -270,38 +270,52 @@ const ShirtPic = ({ sku }) => (
     </Image.Container>
 );
 
-const TestPath = () => (
-    <img src="../public/data/products/12064273040195392_1.jpg" alt="Shirt"/>
-);
-
-const OtherTestPath = () => (
-    <div>
-    <Image.Container size={"square"}>
-        <Image src="https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/products/10412368723880252_1.jpg"/>
-    </Image.Container>
-    </div>
-);
+const getCostString = (cost) => {
+    let costString = cost.toString();
+    let decimalPlace = costString.indexOf('.');
+    if (decimalPlace === -1) {
+        let properFormat = costString + '.00';
+        return properFormat
+    } else if (decimalPlace === costString.length - 2) {
+        let properFormat = costString +'0';
+        return properFormat
+    } else {
+        return costString
+    }
+};
 
 const Pane = ({ product }) => (
   <Column size="one-third">
     <Box>
         <Title className="title" size={4}> { product.title } </Title>
         <ShirtPic sku={product.sku}/>
-        <Title className="price" size={5} spacing="false">${ product.price }</Title>
+        <Title className="price" size={5} spacing="false">${ getCostString(product.price) }</Title>
         <Sizes sizes={product.availableSizes}/>
     </Box>
   </Column>
 );
 
+const Header = () => (
+    <Button.Group>
+        <Image.Container size={96}>
+            <Image className="header" src="/data/cart-icon.png"/>
+        </Image.Container>
+        <Title>Shopping Cart</Title>
+    </Button.Group>
+);
+
 console.log('Test Firebase Pull');
 console.log(allProducts);
 
-const App = () => (
+const App = () => {
+    const [visible, setVisible] = useState(false);
+    const [cart, setCart] = useState([]);
+    return(
     <div>
-        <Image src="https://raw.githubusercontent.com/jeffersonRibeiro/react-shopping-cart/master/src/static/bag-icon.png"/>
-        <Title>Shopping Cart</Title>
+        <Header/>
         <Panes products={localProds} />
     </div>
-);
+    )
+};
 
 export default App;
