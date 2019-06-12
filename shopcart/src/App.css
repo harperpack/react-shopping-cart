@@ -32,6 +32,19 @@
   }
 }
 
+.header {
+    background-color: #ffffff;
+    position: sticky;
+    top: 0;
+    z-index:100;
+}
+
+.sep {
+    height: 2px;
+    background-color: #282c34;
+    margin-top: 0;
+}
+
 .pane {
     margin: 5px 5px;
 }

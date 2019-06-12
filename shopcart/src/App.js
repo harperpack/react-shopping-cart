@@ -5,7 +5,9 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 
 import "rbx/index.css";
-import { Button, Container, Title, Box, Tile, Column, Image, Tag } from 'rbx';
+import { Button, Container, Title, Box, Icon, Column, Image, Tag } from 'rbx';
+
+import Sidebar from "react-sidebar"
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtoMUvXMS2hE8bDmWt2iMjPY7QlLRhRrI",
@@ -247,17 +249,8 @@ const Panes = ({ products }) => (
   </div>
 );
 
-const Sizes = ({ sizes }) => (
-    <Button.Group>
-        <Button inverted color={"black"} state="hovered" className="txtBtn">
-            <Title subtitle size={5}>Add to Cart:</Title>
-        </Button>
-        { sizes.map(size => <Size size={size} key={size}/>)}
-    </Button.Group>
-);
-
 const Size = ({ size }) => (
-    <Button as="a" className="availableSizes" color={"light"}>{size}</Button>
+    <Button color={"light"}>{size}</Button>
 );
 
 const makeRef = (sku) => (
@@ -284,25 +277,61 @@ const getCostString = (cost) => {
     }
 };
 
-const Pane = ({ product }) => (
+const FullButton = () => (
+    <Button fullwidth color={"danger"}>Add to Cart</Button>
+);
+
+const EmptyButton = () => (
+    <Button fullwidth>Add to Cart</Button>
+);
+
+// <Sizes sizes={product.availableSizes}/>
+
+const Pane = ({ product }) => {
+  const [selected, setSelected] = useState('');
+  return(
   <Column size="one-third">
     <Box>
         <Title className="title" size={4}> { product.title } </Title>
         <ShirtPic sku={product.sku}/>
         <Title className="price" size={5} spacing="false">${ getCostString(product.price) }</Title>
-        <Sizes sizes={product.availableSizes}/>
+        <Button.Group>
+            { product.availableSizes.map(size => <Size size={size} key={size}/>)}
+        </Button.Group>
+        {selected != '' ? <FullButton/> : <EmptyButton/>}
     </Box>
   </Column>
+  )
+};
+
+// <i class="fas fa-shopping-cart"></i>
+
+// <Image.Container size={96}>
+//            <Image className="header" src="/data/cart-icon.png"/>
+//        </Image.Container>
+        
+const Header = () => (
+    <div className="header">
+        <Button.Group>
+            <Image.Container size={64}>
+                <Image src="/data/cart-full.png"/>
+            </Image.Container>
+            <Title>&nbsp;&nbsp;Unsightly Men's T-Shirts</Title>
+        </Button.Group>
+        <hr className="sep"/>
+    </div>
 );
 
-const Header = () => (
-    <Button.Group>
-        <Image.Container size={96}>
-            <Image className="header" src="/data/cart-icon.png"/>
-        </Image.Container>
-        <Title>Shopping Cart</Title>
-    </Button.Group>
-);
+//const MainPage = () => (
+//    <div>
+//        <Header/>
+//        <Panes products={localProds} />
+//    </div>
+//);
+
+const addItem = (prod, size) => {
+    
+};
 
 console.log('Test Firebase Pull');
 console.log(allProducts);
@@ -314,6 +343,9 @@ const App = () => {
     <div>
         <Header/>
         <Panes products={localProds} />
+        <Sidebar open={visible} pullRight={true}>
+            Sputter
+        </Sidebar>
     </div>
     )
 };
