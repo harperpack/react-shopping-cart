@@ -39,6 +39,26 @@
     z-index:100;
 }
 
+.cartInfo {
+    background-color: #363636;
+    height: 70px;
+    width: 120px;
+    text-align: center;
+}
+
+.cartFull {
+    color: #ff677d;
+    font-size: 200%;
+    font-weight: bold;
+}
+
+
+.cartEmp {
+    font-size: 200%;
+    font-weight: bold;
+    color: #d1d1d1;
+}
+
 .sep {
     height: 2px;
     background-color: #282c34;

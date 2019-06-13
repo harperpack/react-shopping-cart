@@ -20,13 +20,14 @@ const firebaseConfig = {
 };
 
 // QUESTIONS FOR RIESBECK
-// 1. How do I wait until the Firebase has fetched before I use its data?
-//   1b. How would I get the product sizes?
-//
-// 3. How to make pictures smaller?
+// 1. How do I wait until the Firebase has fetched before I use its data? 
 // 4. How to format for mobile?
 // 3. How can I change the margin on price?
-// 4. 
+// 4. how exactly does the () => func work?
+// #. Why do we no longer declare function(){}?
+// #. Was there a better way to AddtoCart?
+// #. Why didn't my ? operator work for button switching?
+// #. Why was the upper left corner such a nightmare?
 // 5. Why does Travis say I'm still failing?
 // 6. Why do I have these security vulnerabilities?
 // 7. Why do we put spaces between words and curly braces?
@@ -51,8 +52,9 @@ firebase.database().ref("/products").on('value', snap => {
     console.log('Big sad');
 });
 
-let localProds = [
-  {
+let localItems = {"products": 
+ {
+  "12064273040195392": {
     "sku": 12064273040195392,
     "title": "Cat Tee Black T-Shirt",
     "description": "4 MSL",
@@ -63,7 +65,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "51498472915966370": {
     "sku": 51498472915966370,
     "title": "Dark Thug Blue-Navy T-Shirt",
     "description": "",
@@ -74,7 +76,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "10686354557628304": {
     "sku": 10686354557628304,
     "title": "Sphynx Tie Dye Wine T-Shirt",
     "description": "GPX Poly 1",
@@ -85,7 +87,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "11033926921508488": {
     "sku": 11033926921508488,
     "title": "Skuul",
     "description": "Training 2014",
@@ -96,7 +98,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "39876704341265610": {
     "sku": 39876704341265610,
     "title": "Wine Skul T-Shirt",
     "description": "",
@@ -107,7 +109,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "10412368723880252": {
     "sku": 10412368723880252,
     "title": "Short Sleeve T-Shirt",
     "description": "",
@@ -118,7 +120,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "8552515751438644": {
     "sku": 8552515751438644,
     "title": "Cat Tee Black T-Shirt",
     "description": "14/15 unnumbered",
@@ -129,7 +131,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "18644119330491310": {
     "sku": 18644119330491310,
     "title": "Sphynx Tie Dye Grey T-Shirt",
     "description": "14/15 unnumbered",
@@ -140,7 +142,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "11854078013954528": {
     "sku": 11854078013954528,
     "title": "Danger Knife Grey",
     "description": "14/15 unnumbered",
@@ -151,7 +153,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "876661122392077": {
     "sku": 876661122392077,
     "title": "White DGK Script Tee",
     "description": "2014 unnumbered",
@@ -162,7 +164,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "9197907543445676": {
     "sku": 9197907543445676,
     "title": "Born On The Streets",
     "description": "14/15 unnumbered - Player",
@@ -173,7 +175,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": false
   },
-  {
+  "10547961582846888": {
     "sku": 10547961582846888,
     "title": "Tso 3D Short Sleeve T-Shirt A",
     "description": "14/15 + 1st World T-Shirt",
@@ -184,7 +186,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": false
   },
-  {
+  "6090484789343891": {
     "sku": 6090484789343891,
     "title": "Man Tie Dye Cinza Grey T-Shirt",
     "description": "Goalkeeper 13/14",
@@ -195,7 +197,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "18532669286405344": {
     "sku": 18532669286405344,
     "title": "Crazy Monkey Black T-Shirt",
     "description": "1977 Child",
@@ -206,7 +208,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "5619496040738316": {
     "sku": 5619496040738316,
     "title": "Release 3D Black T-Shirt",
     "description": "",
@@ -217,7 +219,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": false
   },
-  {
+  "11600983276356164": {
     "sku": 11600983276356164,
     "title": "Crazy Monkey Grey",
     "description": "",
@@ -228,7 +230,7 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   },
-  {
+  "27250082398145996": {
     "sku": 27250082398145996,
     "title": "On The Streets Black T-Shirt",
     "description": "",
@@ -239,19 +241,20 @@ let localProds = [
     "currencyFormat": "$",
     "isFreeShipping": true
   }
-];
+}
+}
 
-const Panes = ({ products }) => (
-  <div>
-    <Column.Group multiline>
-     { products.map(product => <Pane product={ product } key={product.sku} />) }
-    </Column.Group>
-  </div>
-);
-
-const Size = ({ size }) => (
-    <Button color={"light"}>{size}</Button>
-);
+const Size = ({ size, addSize, clicked }) => {
+    if (clicked != size) {
+        return(
+            <Button color={"light"} onClick={() => addSize(size)}>{size}</Button>
+        )
+    } else {
+        return(
+           <Button outlined color={"danger"} onClick={() => addSize(size)}>{size}</Button> 
+        )
+    }
+};
 
 const makeRef = (sku) => (
     "/data/products/" + sku + "_1.jpg"
@@ -277,18 +280,22 @@ const getCostString = (cost) => {
     }
 };
 
-const FullButton = () => (
-    <Button fullwidth color={"danger"}>Add to Cart</Button>
-);
-
-const EmptyButton = () => (
-    <Button fullwidth>Add to Cart</Button>
-);
-
-// <Sizes sizes={product.availableSizes}/>
-
-const Pane = ({ product }) => {
+const Pane = ({ product, addProd }) => {
   const [selected, setSelected] = useState('');
+  const selectSize = s => {
+      selected != s ? setSelected(s) : setSelected('');
+      console.log(s);
+  };
+  const addToCart = () => {
+      if (selected === '') {
+          alert('Please select a size.');
+      } else {
+          let newProd = Object.assign({}, product);
+          newProd.availableSizes = selected;
+          addProd(newProd);
+          setSelected('');
+      }
+  };
   return(
   <Column size="one-third">
     <Box>
@@ -296,56 +303,89 @@ const Pane = ({ product }) => {
         <ShirtPic sku={product.sku}/>
         <Title className="price" size={5} spacing="false">${ getCostString(product.price) }</Title>
         <Button.Group>
-            { product.availableSizes.map(size => <Size size={size} key={size}/>)}
+            { product.availableSizes.map(size => 
+             <Size size={size} key={size} addSize={(s) => selectSize(s)} clicked={selected}/>)}
         </Button.Group>
-        {selected != '' ? <FullButton/> : <EmptyButton/>}
+        <Button fullwidth color={selected != '' ? "danger" : ''} onClick={() => addToCart()}>
+            Add to Cart
+        </Button>
     </Box>
   </Column>
   )
 };
-
-// <i class="fas fa-shopping-cart"></i>
-
-// <Image.Container size={96}>
-//            <Image className="header" src="/data/cart-icon.png"/>
-//        </Image.Container>
+         
+const TwoDigCart = ({ len }) => (
+    <p className="cartFull">{len}</p>
+);
+         
+const OneDigCart = ({ len }) => (
+    <p className={len != 0 ? "cartFull" : "cartEmp"}>&nbsp;&nbsp;{len}</p>
+);
         
-const Header = () => (
+const Header = ({ cart }) => (
     <div className="header">
         <Button.Group>
-            <Image.Container size={64}>
-                <Image src="/data/cart-full.png"/>
-            </Image.Container>
-            <Title>&nbsp;&nbsp;Unsightly Men's T-Shirts</Title>
+            <div className="cartInfo">
+                <Button.Group>
+                    <Image.Container size={64}>
+                        <Image src="/data/cart-grey.png"/>
+                    </Image.Container>
+                    {cart.length > 9 ? 
+                        <TwoDigCart len={cart.length}/> : 
+                        <OneDigCart len={cart.length}/>}
+                </Button.Group>
+            </div>
+            <Title>&nbsp;Unsightly Men's T-Shirts</Title>
         </Button.Group>
         <hr className="sep"/>
     </div>
 );
 
-//const MainPage = () => (
-//    <div>
-//        <Header/>
-//        <Panes products={localProds} />
-//    </div>
-//);
-
-const addItem = (prod, size) => {
-    
-};
-
 console.log('Test Firebase Pull');
 console.log(allProducts);
+
+//        <Sidebar open={visible} pullRight={true}>
+//            Sputter
+//        </Sidebar>
 
 const App = () => {
     const [visible, setVisible] = useState(false);
     const [cart, setCart] = useState([]);
+    const [items, setItems] = useState(localItems);
+    const itemInCart = checkItem => {
+        if (cart.length === 0) {
+            return -1
+        } else {
+            for (let x = 0; x < cart.length; x++) {
+                if (cart[x].sku === checkItem.sku && 
+                    cart[x].availableSizes === checkItem.availableSizes) {
+                    return x
+                }
+            }
+            return -1
+        }
+    };
+    const addItem = (item) => {
+        let newCart = cart.slice();
+        let cartIndex = itemInCart(item);
+        if (cartIndex >= 0) {
+            newCart[cartIndex].quantity++;
+            console.log("IN CART")
+        } else {
+            item.quantity = 1;
+            newCart.push(item);
+        }
+        setCart(newCart);
+    };
     return(
     <div>
-        <Header/>
-        <Panes products={localProds} />
-        <Sidebar open={visible} pullRight={true}>
-            Sputter
-        </Sidebar>
+        <Header cart={cart}/>
+        <Column.Group multiline>
+            { Object.keys(localItems["products"]).map(product => 
+                <Pane product={ localItems["products"][product] } 
+                      key={localItems["products"][product].sku} addProd={(i) => addItem(i)} />) 
+            }
+        </Column.Group>
     </div>
     )
 };
