@@ -33,6 +33,8 @@ const firebaseConfig = {
 // 7. Why do we put spaces between words and curly braces?
 
 
+// inventory minus what's in the cart - can't checkout until we have space for everything
+
 // what is state?
 // > cart open/closed
 // > what is in cart
@@ -356,7 +358,7 @@ const Header = ({ cart, open, unfurl }) => (
 console.log('Test Firebase Pull');
 console.log(allProducts);
 
-const CartHeader = ({ close, items, cost }) => (
+const CartHeader = ({ close, items }) => (
     <div className="cartHead">
         <Notification color="dark">
             <Level>
@@ -365,7 +367,8 @@ const CartHeader = ({ close, items, cost }) => (
                 </Level.Item>
                 <Level.Item align="right">
                     <Title textColor="warning">
-                        ${cost}
+                        ${getCostString(items.reduce(
+                                function(acc, item){return acc + item.price * item.quantity}, 0))}
                     </Title>
                 </Level.Item>
             </Level>
@@ -450,21 +453,11 @@ const App = () => {
         }
         setCart(newCart);
     };
-//    const subtotal = (item, currentVal) => {
-//        return(item.quantity * item.price + currentVal)
-//    };
-    const subtotal = () => {
-        let total = 0.00;
-        for (let i = 0; i < cart.length; i++) {
-            total += cart[i].quantity * cart[i].price;
-        }
-        return total
-    };
     return(
     <div>
         <Sidebar 
             sidebar=<div className="side-s">
-                    <CartHeader close={() => setVisible(false)} items={cart} cost={subtotal()}/>
+                    <CartHeader close={() => setVisible(false)} items={cart}/>
                     {cart.map(item => <CartPane prod={item} delItem={(i) => removeItem(i)}/>)} 
                     </div>
             open={visible} 
