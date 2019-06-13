@@ -5,7 +5,7 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 
 import "rbx/index.css";
-import { Button, Container, Title, Box, Icon, Column, Image, Tag } from 'rbx';
+import { Button, Notification, Title, Box, Tile, Column, Image, Tag, Level, Delete } from 'rbx';
 
 import Sidebar from "react-sidebar"
 
@@ -244,6 +244,18 @@ let localItems = {"products":
 }
 }
 
+const junk = {
+    "sku": 27250082398145996,
+    "title": "On The Streets Black T-Shirt",
+    "description": "",
+    "availableSizes": ["L", "XL"],
+    "style": "",
+    "price": 49,
+    "currencyId": "USD",
+    "currencyFormat": "$",
+    "isFreeShipping": true
+  }
+
 const Size = ({ size, addSize, clicked }) => {
     if (clicked != size) {
         return(
@@ -322,10 +334,10 @@ const OneDigCart = ({ len }) => (
     <p className={len != 0 ? "cartFull" : "cartEmp"}>&nbsp;&nbsp;{len}</p>
 );
         
-const Header = ({ cart }) => (
-    <div className="header">
+const Header = ({ cart, open, unfurl }) => (
+    <div className={open != true ? "header" : "open-h"}>
         <Button.Group>
-            <div className="cartInfo">
+            <div className="cartInfo" onClick={() => unfurl()}>
                 <Button.Group>
                     <Image.Container size={64}>
                         <Image src="/data/cart-grey.png"/>
@@ -344,9 +356,60 @@ const Header = ({ cart }) => (
 console.log('Test Firebase Pull');
 console.log(allProducts);
 
-//        <Sidebar open={visible} pullRight={true}>
-//            Sputter
-//        </Sidebar>
+const CartHeader = ({ close, items, cost }) => (
+    <div className="cartHead">
+        <Notification color="dark">
+            <Level>
+                <Level.Item align="left">
+                    <Title textColor="warning">SUBTOTAL</Title>
+                </Level.Item>
+                <Level.Item align="right">
+                    <Title textColor="warning">
+                        ${cost}
+                    </Title>
+                </Level.Item>
+            </Level>
+            <Button.Group>
+                <Button fullwidth outlined color="warning" onClick={() => close()}>CLOSE CART</Button>
+                <Button fullwidth focused color="warning">CHECKOUT</Button>
+            </Button.Group>
+        </Notification>
+    </div>
+);
+
+const CartPane = ({ prod, delItem }) => (
+    <div className="open-s">
+        <Tile vertical kind="ancestor">
+            <Tile kind="parent">
+                <Tile as={Notification} kind="child" color="dark">
+                    <Box className="boxPane" marginless>
+                        <Column.Group gapless>
+                            <Column size="one-fifth">
+                                <img className="cartImg" src={makeRef(prod.sku)}/>
+                            </Column>
+                            <Column size="four-fifths">
+                                <Title size={5} className="cartTitle"><b>{prod.title}</b></Title>
+                                <Title subtitle>
+                                    &nbsp;{prod.availableSizes} | Quantity: {prod.quantity}
+                                </Title>
+                                <Level className="closer">
+                                    <Level.Item align="left">
+                                    <Title textColor="danger" as="p" size={4} align="left">
+                                        ${ getCostString(prod.price) }
+                                    </Title>
+                                    </Level.Item>
+                                    <Level.Item align="right">
+                                        <Delete size={"medium"} align="right" onClick={() => delItem(prod)}/>
+                                    </Level.Item>
+                                </Level>
+                            </Column>
+                        </Column.Group>
+                    </Box>
+                </Tile>
+            </Tile>
+        </Tile>
+    </div>
+);
 
 const App = () => {
     const [visible, setVisible] = useState(false);
@@ -376,10 +439,38 @@ const App = () => {
             newCart.push(item);
         }
         setCart(newCart);
+        setVisible(true);
+    };
+    const removeItem = (item) => {
+        let newCart = cart.slice();
+        let cartIndex = itemInCart(item);
+        newCart[cartIndex].quantity--;
+        if (newCart[cartIndex].quantity === 0) {
+            newCart.splice(cartIndex, 1);
+        }
+        setCart(newCart);
+    };
+//    const subtotal = (item, currentVal) => {
+//        return(item.quantity * item.price + currentVal)
+//    };
+    const subtotal = () => {
+        let total = 0.00;
+        for (let i = 0; i < cart.length; i++) {
+            total += cart[i].quantity * cart[i].price;
+        }
+        return total
     };
     return(
     <div>
-        <Header cart={cart}/>
+        <Sidebar 
+            sidebar=<div className="side-s">
+                    <CartHeader close={() => setVisible(false)} items={cart} cost={subtotal()}/>
+                    {cart.map(item => <CartPane prod={item} delItem={(i) => removeItem(i)}/>)} 
+                    </div>
+            open={visible} 
+            pullRight={true}>
+        </Sidebar>
+        <Header cart={cart} open={visible} unfurl={() => setVisible(true)}/>
         <Column.Group multiline>
             { Object.keys(localItems["products"]).map(product => 
                 <Pane product={ localItems["products"][product] } 
