@@ -5,9 +5,14 @@ import firebase from 'firebase/app';
 import 'firebase/database';
 
 import "rbx/index.css";
-import { Button, Notification, Title, Box, Tile, Column, Image, Tag, Level, Delete } from 'rbx';
+import {Column } from 'rbx';
 
-import Sidebar from "react-sidebar"
+import Sidebar from "react-sidebar";
+
+import CartHeader from './CartHeader.js';
+import CartPane from './CartPane.js';
+import Header from './PageHeader.js';
+import Pane from './ItemPane.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtoMUvXMS2hE8bDmWt2iMjPY7QlLRhRrI",
@@ -44,7 +49,7 @@ firebase.initializeApp(firebaseConfig);
 
 let allProducts = [];
 
-firebase.database().ref("/products").on('value', snap => {
+firebase.database().ref("/inventory").on('value', snap => {
   if (snap.val()) {
     console.log('Success!');
     let allProducts = snap.val();
@@ -246,173 +251,8 @@ let localItems = {"products":
 }
 }
 
-const junk = {
-    "sku": 27250082398145996,
-    "title": "On The Streets Black T-Shirt",
-    "description": "",
-    "availableSizes": ["L", "XL"],
-    "style": "",
-    "price": 49,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  }
-
-const Size = ({ size, addSize, clicked }) => {
-    if (clicked != size) {
-        return(
-            <Button color={"light"} onClick={() => addSize(size)}>{size}</Button>
-        )
-    } else {
-        return(
-           <Button outlined color={"danger"} onClick={() => addSize(size)}>{size}</Button> 
-        )
-    }
-};
-
-const makeRef = (sku) => (
-    "/data/products/" + sku + "_1.jpg"
-);
-
-const ShirtPic = ({ sku }) => (
-    <Image.Container>
-        <Image src={makeRef(sku)} className="shirtPic" alt="Shirt"/>
-    </Image.Container>
-);
-
-const getCostString = (cost) => {
-    let costString = cost.toString();
-    let decimalPlace = costString.indexOf('.');
-    if (decimalPlace === -1) {
-        let properFormat = costString + '.00';
-        return properFormat
-    } else if (decimalPlace === costString.length - 2) {
-        let properFormat = costString +'0';
-        return properFormat
-    } else {
-        return costString
-    }
-};
-
-const Pane = ({ product, addProd }) => {
-  const [selected, setSelected] = useState('');
-  const selectSize = s => {
-      selected != s ? setSelected(s) : setSelected('');
-      console.log(s);
-  };
-  const addToCart = () => {
-      if (selected === '') {
-          alert('Please select a size.');
-      } else {
-          let newProd = Object.assign({}, product);
-          newProd.availableSizes = selected;
-          addProd(newProd);
-          setSelected('');
-      }
-  };
-  return(
-  <Column size="one-third">
-    <Box>
-        <Title className="title" size={4}> { product.title } </Title>
-        <ShirtPic sku={product.sku}/>
-        <Title className="price" size={5} spacing="false">${ getCostString(product.price) }</Title>
-        <Button.Group>
-            { product.availableSizes.map(size => 
-             <Size size={size} key={size} addSize={(s) => selectSize(s)} clicked={selected}/>)}
-        </Button.Group>
-        <Button fullwidth color={selected != '' ? "danger" : ''} onClick={() => addToCart()}>
-            Add to Cart
-        </Button>
-    </Box>
-  </Column>
-  )
-};
-         
-const TwoDigCart = ({ len }) => (
-    <p className="cartFull">{len}</p>
-);
-         
-const OneDigCart = ({ len }) => (
-    <p className={len != 0 ? "cartFull" : "cartEmp"}>&nbsp;&nbsp;{len}</p>
-);
-        
-const Header = ({ cart, open, unfurl }) => (
-    <div className={open != true ? "header" : "open-h"}>
-        <Button.Group>
-            <div className="cartInfo" onClick={() => unfurl()}>
-                <Button.Group>
-                    <Image.Container size={64}>
-                        <Image src="/data/cart-grey.png"/>
-                    </Image.Container>
-                    {cart.length > 9 ? 
-                        <TwoDigCart len={cart.length}/> : 
-                        <OneDigCart len={cart.length}/>}
-                </Button.Group>
-            </div>
-            <Title>&nbsp;Unsightly Men's T-Shirts</Title>
-        </Button.Group>
-        <hr className="sep"/>
-    </div>
-);
-
 console.log('Test Firebase Pull');
 console.log(allProducts);
-
-const CartHeader = ({ close, items }) => (
-    <div className="cartHead">
-        <Notification color="dark">
-            <Level>
-                <Level.Item align="left">
-                    <Title textColor="warning">SUBTOTAL</Title>
-                </Level.Item>
-                <Level.Item align="right">
-                    <Title textColor="warning">
-                        ${getCostString(items.reduce(
-                                function(acc, item){return acc + item.price * item.quantity}, 0))}
-                    </Title>
-                </Level.Item>
-            </Level>
-            <Button.Group>
-                <Button fullwidth outlined color="warning" onClick={() => close()}>CLOSE CART</Button>
-                <Button fullwidth focused color="warning">CHECKOUT</Button>
-            </Button.Group>
-        </Notification>
-    </div>
-);
-
-const CartPane = ({ prod, delItem }) => (
-    <div className="open-s">
-        <Tile vertical kind="ancestor">
-            <Tile kind="parent">
-                <Tile as={Notification} kind="child" color="dark">
-                    <Box className="boxPane" marginless>
-                        <Column.Group gapless>
-                            <Column size="one-fifth">
-                                <img className="cartImg" src={makeRef(prod.sku)}/>
-                            </Column>
-                            <Column size="four-fifths">
-                                <Title size={5} className="cartTitle"><b>{prod.title}</b></Title>
-                                <Title subtitle>
-                                    &nbsp;{prod.availableSizes} | Quantity: {prod.quantity}
-                                </Title>
-                                <Level className="closer">
-                                    <Level.Item align="left">
-                                    <Title textColor="danger" as="p" size={4} align="left">
-                                        ${ getCostString(prod.price) }
-                                    </Title>
-                                    </Level.Item>
-                                    <Level.Item align="right">
-                                        <Delete size={"medium"} align="right" onClick={() => delItem(prod)}/>
-                                    </Level.Item>
-                                </Level>
-                            </Column>
-                        </Column.Group>
-                    </Box>
-                </Tile>
-            </Tile>
-        </Tile>
-    </div>
-);
 
 const App = () => {
     const [visible, setVisible] = useState(false);
