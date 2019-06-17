@@ -7,6 +7,22 @@ import { Button, Title, Box, Column, Image } from 'rbx';
 import getCostString from './getCostString.js';
 import makeRef from './makeRef.js';
 
+const CartButton = ({ selected, available, addItem }) => {
+    if (available > 0) {
+        return(
+            <Button fullwidth color={selected !== '' ? "danger" : ''} onClick={() => addItem()}>
+                Add to Cart
+            </Button>
+        );
+    } else {
+        return(
+            <Button fullwidth disabled color={"light"}>
+                <b>OUT OF STOCK</b>
+            </Button>
+        );
+    }
+};
+
 const Size = ({ size, addSize, clicked }) => {
     if (clicked !== size) {
         return(
@@ -19,17 +35,18 @@ const Size = ({ size, addSize, clicked }) => {
     }
 };
 
-const ShirtPic = ({ sku }) => (
+const ShirtPic = ({ sku, available }) => (
+    <div>
     <Image.Container>
-        <Image src={makeRef(sku)} className="shirtPic" alt="Shirt"/>
+        <Image src={makeRef(sku)} className={available > 0 ? "shirtPic" : "shirtOut"} alt="Shirt"/>
     </Image.Container>
+    </div>
 );
 
-const Pane = ({ product, addProd }) => {
+const Pane = ({ product, addProd, sizes }) => {
   const [selected, setSelected] = useState('');
   const selectSize = s => {
       selected !== s ? setSelected(s) : setSelected('');
-      console.log(s);
   };
   const addToCart = () => {
       if (selected === '') {
@@ -41,19 +58,31 @@ const Pane = ({ product, addProd }) => {
           setSelected('');
       }
   };
+  const inStock = (product, inventory) => {
+    if (typeof inventory !== 'undefined') {
+        return Object.keys(inventory).filter(size => inventory[size] > 0)
+    } else {
+        return [];
+    }
+  };
+  const outOfStock = (sizes) => {
+      if (typeof sizes === 'undefined') {
+          return 0;
+      } else {
+          return Object.keys(sizes).reduce(function(acc, size){return acc + sizes[size]}, 0);
+      }
+  };
   return(
   <Column size="one-third">
     <Box>
-        <Title className="title" size={4}> { product.title } </Title>
-        <ShirtPic sku={product.sku}/>
+        <Title className="prodTitle" size={4}> { product.title } </Title>
+        <ShirtPic sku={product.sku} available={outOfStock(sizes)}/>
         <Title className="price" size={5} spacing="false">${ getCostString(product.price) }</Title>
         <Button.Group>
-            { product.availableSizes.map(size => 
+            { inStock(product, sizes).map(size => 
              <Size size={size} key={size} addSize={(s) => selectSize(s)} clicked={selected}/>)}
         </Button.Group>
-        <Button fullwidth color={selected !== '' ? "danger" : ''} onClick={() => addToCart()}>
-            Add to Cart
-        </Button>
+        <CartButton selected={selected} addItem={() => addToCart()} available={outOfStock(sizes)}/>
     </Box>
   </Column>
   )

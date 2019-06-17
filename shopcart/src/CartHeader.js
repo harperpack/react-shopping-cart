@@ -6,7 +6,7 @@ import { Button, Notification, Title, Level } from 'rbx';
 
 import getCostString from './getCostString.js';
 
-const CartHeader = ({ close, items }) => (
+const CartHeader = ({ close, items, checkout }) => (
     <div className="cartHead">
         <Notification color="dark">
             <Level>
@@ -22,7 +22,7 @@ const CartHeader = ({ close, items }) => (
             </Level>
             <Button.Group>
                 <Button fullwidth outlined color="warning" onClick={() => close()}>CLOSE CART</Button>
-                <Button fullwidth color="warning">CHECKOUT</Button>
+                <Button fullwidth color="warning" onClick={() => checkout()}>CHECKOUT</Button>
             </Button.Group>
         </Notification>
     </div>

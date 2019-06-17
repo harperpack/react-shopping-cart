@@ -13,6 +13,7 @@ import CartHeader from './CartHeader.js';
 import CartPane from './CartPane.js';
 import Header from './PageHeader.js';
 import Pane from './ItemPane.js';
+import getCostString from './getCostString.js';
 
 const firebaseConfig = {
   apiKey: "AIzaSyAtoMUvXMS2hE8bDmWt2iMjPY7QlLRhRrI",
@@ -37,227 +38,67 @@ const firebaseConfig = {
 // 6. Why do I have these security vulnerabilities?
 // 7. Why do we put spaces between words and curly braces?
 
-
 // inventory minus what's in the cart - can't checkout until we have space for everything
-
-// what is state?
-// > cart open/closed
-// > what is in cart
-// > 
 
 firebase.initializeApp(firebaseConfig);
 
-let allProducts = [];
-
-firebase.database().ref("/inventory").on('value', snap => {
-  if (snap.val()) {
-    console.log('Success!');
-    let allProducts = snap.val();
-    console.log(allProducts);
-  }
-}, error => {
-    console.log('Big sad');
-});
-
-let localItems = {"products": 
- {
-  "12064273040195392": {
-    "sku": 12064273040195392,
-    "title": "Cat Tee Black T-Shirt",
-    "description": "4 MSL",
-    "availableSizes": ["S", "XS"],
-    "style": "Black with custom print",
-    "price": 10.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "51498472915966370": {
-    "sku": 51498472915966370,
-    "title": "Dark Thug Blue-Navy T-Shirt",
-    "description": "",
-    "availableSizes": ["M"],
-    "style": "Front print and paisley print",
-    "price": 29.45,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "10686354557628304": {
-    "sku": 10686354557628304,
-    "title": "Sphynx Tie Dye Wine T-Shirt",
-    "description": "GPX Poly 1",
-    "availableSizes": ["X", "L", "XL"],
-    "style": "Front tie dye print",
-    "price": 9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "11033926921508488": {
-    "sku": 11033926921508488,
-    "title": "Skuul",
-    "description": "Training 2014",
-    "availableSizes": ["X", "L", "XL", "XXL"],
-    "style": "Black T-Shirt with front print",
-    "price": 14,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "39876704341265610": {
-    "sku": 39876704341265610,
-    "title": "Wine Skul T-Shirt",
-    "description": "",
-    "availableSizes": ["X", "L"],
-    "style": "Wine",
-    "price": 13.25,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "10412368723880252": {
-    "sku": 10412368723880252,
-    "title": "Short Sleeve T-Shirt",
-    "description": "",
-    "availableSizes": ["XS", "X", "L", "ML", "XL"],
-    "style": "Grey",
-    "price": 75,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "8552515751438644": {
-    "sku": 8552515751438644,
-    "title": "Cat Tee Black T-Shirt",
-    "description": "14/15 unnumbered",
-    "availableSizes": ["X", "L", "XL", "XXL"],
-    "style": "White with black stripes",
-    "price": 10.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "18644119330491310": {
-    "sku": 18644119330491310,
-    "title": "Sphynx Tie Dye Grey T-Shirt",
-    "description": "14/15 unnumbered",
-    "availableSizes": ["X", "L", "XL", "XXL"],
-    "style": "Black with white stripes",
-    "price": 10.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "11854078013954528": {
-    "sku": 11854078013954528,
-    "title": "Danger Knife Grey",
-    "description": "14/15 unnumbered",
-    "availableSizes": ["X", "L"],
-    "style": "White with black stripes",
-    "price": 14.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "876661122392077": {
-    "sku": 876661122392077,
-    "title": "White DGK Script Tee",
-    "description": "2014 unnumbered",
-    "availableSizes": ["X", "L"],
-    "style": "Black with white stripes",
-    "price": 14.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "9197907543445676": {
-    "sku": 9197907543445676,
-    "title": "Born On The Streets",
-    "description": "14/15 unnumbered - Player",
-    "availableSizes": ["XL"],
-    "style": "White with black stripes",
-    "price": 25.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": false
-  },
-  "10547961582846888": {
-    "sku": 10547961582846888,
-    "title": "Tso 3D Short Sleeve T-Shirt A",
-    "description": "14/15 + 1st World T-Shirt",
-    "availableSizes": ["X", "L", "XL"],
-    "style": "Black",
-    "price": 10.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": false
-  },
-  "6090484789343891": {
-    "sku": 6090484789343891,
-    "title": "Man Tie Dye Cinza Grey T-Shirt",
-    "description": "Goalkeeper 13/14",
-    "availableSizes": ["XL", "XXL"],
-    "style": "White",
-    "price": 49.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "18532669286405344": {
-    "sku": 18532669286405344,
-    "title": "Crazy Monkey Black T-Shirt",
-    "description": "1977 Child",
-    "availableSizes": ["S"],
-    "style": "Black with white stripes",
-    "price": 22.5,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "5619496040738316": {
-    "sku": 5619496040738316,
-    "title": "Release 3D Black T-Shirt",
-    "description": "",
-    "availableSizes": ["XL"],
-    "style": "Dark blue",
-    "price": 18.7,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": false
-  },
-  "11600983276356164": {
-    "sku": 11600983276356164,
-    "title": "Crazy Monkey Grey",
-    "description": "",
-    "availableSizes": ["L", "XL"],
-    "style": "",
-    "price": 134.9,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  },
-  "27250082398145996": {
-    "sku": 27250082398145996,
-    "title": "On The Streets Black T-Shirt",
-    "description": "",
-    "availableSizes": ["L", "XL"],
-    "style": "",
-    "price": 49,
-    "currencyId": "USD",
-    "currencyFormat": "$",
-    "isFreeShipping": true
-  }
-}
-}
-
-console.log('Test Firebase Pull');
-console.log(allProducts);
+const db = firebase.database().ref();
 
 const App = () => {
     const [visible, setVisible] = useState(false);
     const [cart, setCart] = useState([]);
-    const [items, setItems] = useState(localItems);
+    const [items, setItems] = useState({});
+    const [stock, setStock] = useState({});
+    useEffect(() => {
+        const handleData = snap => {
+            if (snap.val()) {
+                let data = snap.val();
+                setItems(data["products"]);
+                setStock(data["inventory"]);
+//                console.log("HERE IS ITEMS");
+//                console.log(items);
+//                console.log("HERE IS THE SNAP VAL");
+//                console.log(snap.val());
+//                console.log("HERE IS INVENTORY");
+//                console.log(stock);
+            }
+        }
+        db.on('value', handleData, error => alert(error));
+        return () => { db.off('value', handleData); };
+        }, []);
+    const checkoutCart = () => {
+        if (cart.length === 0) {
+            alert('Please add items to your cart in order to checkout.')
+            return;
+        }
+        firebase.database().ref("/inventory").on("value", snap => {
+            if (snap.val()) {
+                let curStock = snap.val();
+                let newCart = cart.slice();
+                let unfulfilled = newCart.filter(item => {
+                        let cartQuant = item["quantity"];
+                        let s = item["availableSizes"];
+                        let sku = item["sku"].toString();
+                        let curQuant = curStock[sku][s];
+                        return(cartQuant > curQuant);
+                    });
+                let fulfilled = newCart.filter(item => unfulfilled.indexOf(item) === -1);
+                let totalCost = getCostString(fulfilled.reduce(
+                                function(acc, item){return acc + item.price * item.quantity}, 0));
+                if (unfulfilled.length > 0) {
+                    let names = unfulfilled.map(prod => prod.title);
+                    alert('Due to inventory shortages, only part of your order was completed.');
+                    alert('The following items were excluded from your purchase: ' + names);
+                    alert('Your account was only charged $' + totalCost);
+                } else {
+                    alert('Thank you for your purchase!  Your account was charged $' + totalCost);
+                }
+                setCart([]);
+            }
+        }, error => {
+            console.log('Error')
+        });  
+    };
     const itemInCart = checkItem => {
         if (cart.length === 0) {
             return -1
@@ -276,11 +117,11 @@ const App = () => {
         let cartIndex = itemInCart(item);
         if (cartIndex >= 0) {
             newCart[cartIndex].quantity++;
-            console.log("IN CART")
         } else {
             item.quantity = 1;
             newCart.push(item);
         }
+        updateStock(item, 'adding');
         setCart(newCart);
         setVisible(true);
     };
@@ -291,23 +132,35 @@ const App = () => {
         if (newCart[cartIndex].quantity === 0) {
             newCart.splice(cartIndex, 1);
         }
+        updateStock(item, 'removing');
         setCart(newCart);
+    };
+    const updateStock = (item, spec) => {
+        let newStock = Object.assign({}, stock);
+        let sku = item["sku"];
+        let s = item["availableSizes"];
+        if (spec === 'adding') {
+            newStock[sku][s]--;
+        } else if (spec === 'removing') {
+            newStock[sku][s]++;
+        }
+        setStock(newStock);
     };
     return(
     <div>
         <Sidebar 
             sidebar=<div className="side-s">
-                    <CartHeader close={() => setVisible(false)} items={cart}/>
-                    {cart.map(item => <CartPane prod={item} delItem={(i) => removeItem(i)}/>)} 
+                    <CartHeader close={() => setVisible(false)} items={cart} checkout={() => checkoutCart()}/>
+                    {cart.map(item => <CartPane prod={item} delItem={(i) => removeItem(i)} key={item["sku"] + item["availableSizes"]}/>)} 
                     </div>
             open={visible} 
             pullRight={true}>
         </Sidebar>
         <Header cart={cart} open={visible} unfurl={() => setVisible(true)}/>
         <Column.Group multiline>
-            { Object.keys(localItems["products"]).map(product => 
-                <Pane product={ localItems["products"][product] } 
-                      key={localItems["products"][product].sku} addProd={(i) => addItem(i)} />) 
+            { Object.keys(items).map(product => 
+                <Pane product={ items[product] } 
+                      key={items[product].sku} addProd={(i) => addItem(i)} sizes={stock[product]} />) 
             }
         </Column.Group>
     </div>
