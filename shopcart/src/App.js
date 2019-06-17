@@ -67,6 +67,7 @@ const App = () => {
         return () => { db.off('value', handleData); };
         }, []);
     const checkoutCart = () => {
+        let purchaseMessage = '';
         if (cart.length === 0) {
             alert('Please add items to your cart in order to checkout.')
             return;
@@ -87,17 +88,18 @@ const App = () => {
                                 function(acc, item){return acc + item.price * item.quantity}, 0));
                 if (unfulfilled.length > 0) {
                     let names = unfulfilled.map(prod => prod.title);
-                    alert('Due to inventory shortages, only part of your order was completed.');
-                    alert('The following items were excluded from your purchase: ' + names);
-                    alert('Your account was only charged $' + totalCost);
+                    unfulfilled.map(item => updateStock(item, 'removing'));
+                    purchaseMessage = 'Due to inventory shortages, only part of your order was completed. \n The following items were excluded from your purchase: ' + names + ' \n Your account was only charged $' + totalCost;
                 } else {
-                    alert('Thank you for your purchase!  Your account was charged $' + totalCost);
+                    purchaseMessage = 'Thank you for your purchase!  Your account was charged $' + totalCost;
                 }
                 setCart([]);
             }
         }, error => {
             console.log('Error')
-        });  
+        });
+        alert(purchaseMessage);
+        Object.keys(stock).map(sku => firebase.database().ref("/inventory").child(sku).set(stock[sku]));
     };
     const itemInCart = checkItem => {
         if (cart.length === 0) {
