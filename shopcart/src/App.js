@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 
-import firebase from 'firebase/app';
+import firebase from 'firebase';
 import 'firebase/database';
 
 import "rbx/index.css";
@@ -49,18 +49,16 @@ const App = () => {
     const [cart, setCart] = useState([]);
     const [items, setItems] = useState({});
     const [stock, setStock] = useState({});
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+        firebase.auth().onAuthStateChanged(setUser);
+    }, []);
     useEffect(() => {
         const handleData = snap => {
             if (snap.val()) {
                 let data = snap.val();
                 setItems(data["products"]);
                 setStock(data["inventory"]);
-//                console.log("HERE IS ITEMS");
-//                console.log(items);
-//                console.log("HERE IS THE SNAP VAL");
-//                console.log(snap.val());
-//                console.log("HERE IS INVENTORY");
-//                console.log(stock);
             }
         }
         db.on('value', handleData, error => alert(error));
@@ -158,7 +156,7 @@ const App = () => {
             open={visible} 
             pullRight={true}>
         </Sidebar>
-        <Header cart={cart} open={visible} unfurl={() => setVisible(true)}/>
+        <Header cart={cart} open={visible} unfurl={() => setVisible(true)} user={user}/>
         <Column.Group multiline>
             { Object.keys(items).map(product => 
                 <Pane product={ items[product] } 
