@@ -65,6 +65,10 @@ const App = () => {
         return () => { db.off('value', handleData); };
         }, []);
     const checkoutCart = () => {
+        if (user === null) {
+            alert('Please sign in to checkout.')
+            return;
+        }
         let purchaseMessage = '';
         if (cart.length === 0) {
             alert('Please add items to your cart in order to checkout.')
@@ -150,7 +154,7 @@ const App = () => {
     <div>
         <Sidebar 
             sidebar=<div className="side-s">
-                    <CartHeader close={() => setVisible(false)} items={cart} checkout={() => checkoutCart()}/>
+                    <CartHeader close={() => setVisible(false)} items={cart} user={user} checkout={() => checkoutCart()}/>
                     {cart.map(item => <CartPane prod={item} delItem={(i) => removeItem(i)} key={item["sku"] + item["availableSizes"]}/>)} 
                     </div>
             open={visible} 

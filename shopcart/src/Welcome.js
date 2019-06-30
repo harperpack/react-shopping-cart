@@ -5,9 +5,9 @@ import { Button, Message } from 'rbx';
 import firebase from 'firebase';
 
 const Welcome = ({ user }) => (
-  <Message color="info">
+  <Message color="light">
     <Message.Header>
-      Welcome, {user.displayName}
+      Welcome, {user.displayName} &nbsp;&nbsp;
       <Button primary onClick={() => firebase.auth().signOut()}>
         Log out
       </Button>
